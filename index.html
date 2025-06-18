@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>開演カウントダウン</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: url('BaG_BackNoBlur_Thumbnail250603-0308.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: white;
+    }
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .logo-area {
+      position: absolute;
+      top: 20px;
+      text-align: center;
+      width: 100%;
+      transition: transform 2s ease-in-out;
+    }
+    .logo-area img {
+      height: 60px;
+      opacity: 0.9;
+      transition: transform 2s ease-in-out;
+    }
+    .logo-area.big img {
+      transform: scale(4);
+    }
+    .countdown-box {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+    .countdown-title {
+      font-size: 2rem;
+    }
+    .countdown-time {
+      font-size: 3.5rem;
+      font-weight: bold;
+      margin-top: 15px;
+      letter-spacing: 0.1em;
+    }
+    @media (max-width: 768px) {
+      .countdown-box { padding: 25px; }
+      .countdown-title { font-size: 1.5rem; }
+      .countdown-time { font-size: 2.5rem; }
+      .logo-area img { height: 50px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="logo-area" id="logoArea">
+      <img src="BaG_Logo.png" alt="BaGロゴ" />
+    </div>
+    <div class="countdown-box shadow-lg">
+      <div class="countdown-title" id="countdownTitle">開演まで残り</div>
+      <div class="countdown-time" id="timer">--:--:--</div>
+    </div>
+  </div>
+  <script>
+    function updateCountdown() {
+      const now = new Date();
+      const target = new Date();
+      target.setHours(22, 0, 0, 0);
+      if (now >= target) target.setDate(target.getDate() + 1);
+      const diff = target - now;
+
+      const seconds = Math.floor(diff / 1000);
+
+      if (seconds <= 0) {
+        document.getElementById("countdownTitle").textContent = "🎉 開演しました！ 🎉";
+        document.getElementById("timer").textContent = "";
+        return;
+      }
+
+      if (seconds <= 3) {
+        document.getElementById("countdownTitle").textContent = "まもなく開演！";
+        document.getElementById("logoArea").classList.add("big");
+      }
+
+      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+      const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      const secs = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+      document.getElementById("timer").textContent = `${hours}:${minutes}:${secs}`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
